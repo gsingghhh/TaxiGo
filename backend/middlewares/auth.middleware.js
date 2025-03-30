@@ -1,11 +1,12 @@
 import BLACKLISTTOKEN from "../models/blackListSchema.js";
 import CAPTAIN from "../models/captainSchema.js";
 import jwt from "jsonwebtoken";
+import USER from "../models/userSchema.js";
 
 export const authUser = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ mesage: "Unauthorized" });
+    return res.status(401).json({ mesage: "Token not found" });
   }
 
   const isBlackListed = await BLACKLISTTOKEN.findOne({ token: token });
@@ -21,7 +22,7 @@ export const authUser = async (req, res, next) => {
 
     return next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({message: error});
   }
 };
 
@@ -46,6 +47,6 @@ export const authCaptain = async (req, res, next) => {
 
     return next();
   } catch (err) {
-    return res.status(400).json({ error: err });
+    return res.status(400).json({ error: "Unauthorized" });
   }
 };

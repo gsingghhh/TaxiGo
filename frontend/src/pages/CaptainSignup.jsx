@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import { captainDataContext } from '../context/CaptainContext.jsx';
+import axios from 'axios';
 
 const CaptainSignup = () => {const navigate = useNavigate();
 
@@ -10,22 +12,46 @@ const CaptainSignup = () => {const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [captainData, setCaptainData] = useState({});
+    const [color, setColor] = useState('')
+    const [capacity, setCapacity] = useState(null)
+    const [plate, setPlate] = useState(null)
+    const [vehicleType, setVehicleType] = useState(null)
+
+    const {captain, setCaptain} = useContext(captainDataContext)
   
-    const handleSumit = (e) => {
+    const handleSumit = async (e) => {
       e.preventDefault();
-      setCaptainData({
+      const captainData = {
         fullName: {
           firstName,
           lastName,
         },
         email,
         password,
-      });
+        vehicle:{
+          color,
+          plate,
+          capacity,
+          vehicleType
+        }
+      };
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+
+      if(response.status === 201){
+        const data = response.data
+        setCaptain(data.captain)
+        navigate('/captain-login')
+      }
+
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
-      navigate("/login");
+      setCapacity('')
+      setColor('')
+      setVehicleType('')
+      setPlate('')
     };
   
     return (
@@ -34,9 +60,9 @@ const CaptainSignup = () => {const navigate = useNavigate();
         <div className="flex flex-col gap-30">
           <div className="mt-4 p-6">
             <form onSubmit={(e) => handleSumit(e)}>
-              <h2 className="text-2xl mb-2 font-semibold">
+              <h3 className="text-xl mb-2 font-semibold">
                 <label htmlFor="email">Enter Full Name</label>
-              </h2>
+              </h3>
               <div className="flex gap-4">
                 <input
                   className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
@@ -62,9 +88,9 @@ const CaptainSignup = () => {const navigate = useNavigate();
                   placeholder="Last Name"
                 />
               </div>
-              <h2 className="text-2xl mb-2 font-semibold">
+              <h3 className="text-xl mb-2 font-semibold">
                 <label htmlFor="email">Email</label>
-              </h2>
+              </h3>
               <input
                 className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
                 type="email"
@@ -77,11 +103,11 @@ const CaptainSignup = () => {const navigate = useNavigate();
                 required
                 placeholder="email@example.com"
               />
-              <h2 className="text-2xl mb-2 font-semibold">
+              <h3 className="text-xl mb-2 font-semibold">
                 <label htmlFor="password">Password</label>
-              </h2>
+              </h3>
               <input
-                className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base"
+                className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
                 type="password"
                 name="password"
                 value={password}
@@ -91,11 +117,69 @@ const CaptainSignup = () => {const navigate = useNavigate();
                 id="password"
                 placeholder="password"
               />
+              <h3 className="text-xl mb-2 font-semibold">
+                <label>Enter Vehicle Information</label>
+              </h3>
+              <div className="flex gap-4">
+                <input
+                  className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
+                  type="text"
+                  name="color"
+                  value={color}
+                  onChange={(e) => {
+                    setColor(e.target.value);
+                  }}
+                  id="color"
+                  required
+                  placeholder="Color"
+                />
+                <input
+                  className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
+                  type="text"
+                  name="plate"
+                  value={plate}
+                  onChange={(e) => {
+                    setPlate(e.target.value);
+                  }}
+                  id="plate"
+                  required
+                  placeholder="Registration info"
+                />
+              </div>
+              <div className="flex gap-4">
+                <input
+                  className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
+                  type="number"
+                  name="capacity"
+                  value={capacity}
+                  onChange={(e) => {
+                    setCapacity(e.target.value);
+                  }}
+                  id="capacity"
+                  required
+                  placeholder="Capacity"
+                />
+                <select
+                  className="bg-orange-50 rounded px-4 py-2 w-full text-base mb-3"
+                  name="vehicleType"
+                  value={vehicleType}
+                  onChange={(e) => {
+                    setVehicleType(e.target.value);
+                  }}
+                  id="vehicleType"
+                  required
+                >
+                  <option selected disabled>Vehicle Type</option>
+                  <option value="bike">Bike</option>
+                  <option value="auto">Auto</option>
+                  <option value="car">Car</option>
+                </select>
+              </div>
               <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
-                SignUp
+                Register as Captain
               </button>
             </form>
-            <p className="text-lg text-center font-semibold mt-3">
+            <p className="text-md text-center font-semibold mt-3">
               Already a Captain?{" "}
               <Link to={"/captain-login"} className="text-blue-600">
                 Login
