@@ -109,7 +109,6 @@ const Home = () => {
           <Logo />
         </div>
         <img
-          onClick={() => setVehiclePanelOpen(false)}
           className="h-screen w-screen"
           src="tempImage.png"
           alt=""
