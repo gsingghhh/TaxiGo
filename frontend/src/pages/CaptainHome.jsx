@@ -92,7 +92,7 @@ const CaptainHome = () => {
 
   return (
     <div className="relative h-screen">
-      <div className="fixed top-0 z-10 pt-7 flex items-center justify-between w-full">
+      <div className="fixed top-0 z-20 pt-7 flex items-center justify-between w-full">
         <Logo />
         <Link
           to={"/captain-home"}
@@ -101,10 +101,11 @@ const CaptainHome = () => {
           <i className="ri-logout-box-line"></i>
         </Link>
       </div>
-      <div className="fixed top-0 z-5 h-3/5">
+      <div className="fixed top-0 z-10 w-full">
+        {/* <img src="tempImage.png" alt="" /> */}
         <LiveTracking/>
       </div>
-      <div className="fixed bottom-0 w-full h-2/5 px-4 z-30 pt-6">
+      <div className="fixed bg-white rounded-t-3xl shadow-2xl bottom-0 w-full h-2/5 px-4 z-30 pt-6">
         <CaptainDetails />
       </div>
       <div
