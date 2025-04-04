@@ -47,6 +47,13 @@ const rideSchema = new mongoose.Schema({
     select: false,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 3600
+  }
+}, {
+  timestamps: false
 });
 
 const RIDE = mongoose.model("ride", rideSchema);
