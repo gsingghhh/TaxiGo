@@ -11,13 +11,12 @@ const CaptainSignup = () => {const navigate = useNavigate();
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [captainData, setCaptainData] = useState({});
     const [color, setColor] = useState('')
     const [capacity, setCapacity] = useState(null)
     const [plate, setPlate] = useState(null)
     const [vehicleType, setVehicleType] = useState(null)
 
-    const {captain, setCaptain} = useContext(captainDataContext)
+    const {setCaptain} = useContext(captainDataContext)
   
     const handleSumit = async (e) => {
       e.preventDefault();

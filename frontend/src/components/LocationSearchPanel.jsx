@@ -1,11 +1,31 @@
+import axios from "axios";
 import React from "react";
 
 const LocationSearchPanel = (props) => {
-  const locations = [
-    "Dream homes, Wave City, Ghaziabad",
-    "Executive floors, Wave City, Ghaziabad",
-    "Veredia, Wave City, Ghaziabad",
-  ];
+  let locations = []
+
+  if(props.activeInput === 'pickup'){
+    locations = props.pickupSuggestions
+  }else{
+    locations = props.destinationSuggestions
+  }
+
+  const generateFare = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem('token')}`
+        },
+        params: {
+          origin: props.pickup,
+          destination: props.destination
+        }
+      })
+      props.setFare(response.data)
+    } catch (error) {
+      console.log({message: error.message})
+    }
+  }
 
   return (
     <div>
@@ -14,8 +34,15 @@ const LocationSearchPanel = (props) => {
           <div
           key={index}
             onClick={() => {
-              props.setVehiclePanelOpen(true);
-              props.setPanelOpen(false);
+              if(props.activeInput === 'pickup'){
+                props.setPickup(location)
+              }
+              else{
+                props.setDestination(location)
+                props.setVehiclePanelOpen(true);
+                props.setPanelOpen(false);
+                generateFare()
+              }
             }}
             className="flex justify-start border-2 border-white active:border-black items-center bg-white rounded-lg my-3 font-medium px-3 py-2"
           >

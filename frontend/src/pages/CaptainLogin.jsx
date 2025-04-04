@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {captain, setCaptain} = useContext(captainDataContext)
+  const {setCaptain} = useContext(captainDataContext)
   const navigate = useNavigate()
 
   const handleSumit = async (e) => {

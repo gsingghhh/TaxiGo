@@ -1,20 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { SocketDataContext } from "../context/SocketContext.jsx";
+import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking.jsx";
 
 const Riding = () => {
+  const location = useLocation();
+  const { ride } = location.state || {};
+  const { socket } = useContext(SocketDataContext);
+  const navigate = useNavigate();
+
+  socket.on("ride-ended", () => {
+    navigate("/home");
+  });
+
   return (
-    <div className="h-screen">
-        <Link to={'/home'} className="fixed flex top-2 right-2 items-center justify-center w-10 h-10 rounded-full bg-white"> 
+    <div className="relative h-screen">
+      <Link
+        to={"/home"}
+        className="fixed z-20 flex top-2 right-2 items-center justify-center w-10 h-10 rounded-full bg-white"
+      >
         <i className="text-lg ri-home-line"></i>
-        </Link>
-      <div className="h-1/2">
-        <img
-          className="h-full w-full object-cover"
-          src="tempImage.png"
-          alt=""
-        />
+      </Link>
+      <div className="fixed top-0 left-0 right-0 z-10 h-1/2">
+        <LiveTracking/>
       </div>
-      <div className="h-1/2 px-4 pt-2">
+      <div className="fixed w-full py-6 pt-10 rounded-t-3xl shadow-lg bottom-0 bg-white z-30 px-4">
         <div className="flex w-full items-center justify-between">
           <img
             className="w-20"
@@ -22,30 +34,35 @@ const Riding = () => {
             alt=""
           />
           <div className="text-right">
-            <h2 className="text-lg font-medium">Gyanendra</h2>
-            <h4 className="text-xl font-semibold -mt-1 -mb-1">UP25 AB 1234</h4>
-            <p className="text-sm text-gray-600">Lamborghini Aventador</p>
+            <h2 className="text-lg font-medium">
+              {ride.captain?.fullName.firstName}
+            </h2>
+            <h4 className="text-xl font-semibold -mt-1 -mb-1">
+              {ride.captain?.vehicle.plate}
+            </h4>
+            <p className="text-sm text-gray-600">
+              {ride.captain?.vehicle.color}
+            </p>
           </div>
         </div>
-        <div className="w-full flex flex-col items-center gap-5 mb-5">
-          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 rounded-xl pb-1">
+        <div className="w-full flex mt-5 flex-col items-center gap-5 mb-5">
+          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
             <i className="text-xl ri-map-pin-line"></i>
             <div>
-              <h3 className="text-xl font-medium">Dream Homes</h3>
-              <p className="-mt-1 text-sm text-gray-600">
-                Wave City, Ghaziabad
-              </p>
+              <h3 className="text-xl font-medium">{ride.destination}</h3>
             </div>
           </div>
-          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 rounded-xl pb-1">
+          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
             <i className=" text-xl ri-money-rupee-circle-line"></i>
             <div>
-              <h3 className="text-xl font-medium">₹ 193</h3>
+              <h3 className="text-xl font-medium">₹ {ride.fare}</h3>
               <p className="-mt-1 text-sm text-gray-600">Cash</p>
             </div>
           </div>
         </div>
-        <button className="w-full bg-green-400 text-white font-semibold p-2 rounded-xl mt-10">Pay before the ride ends</button>
+        <button className="w-full bg-green-500 text-white font-semibold p-2 rounded-xl mt-10">
+          Pay before the ride ends
+        </button>
       </div>
     </div>
   );

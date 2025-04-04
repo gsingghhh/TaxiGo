@@ -16,7 +16,7 @@ export const authUser = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await USER.findById(decoded._id);
+    const user = await USER.findOne({_id: decoded._id});
 
     req.user = user;
 
@@ -41,7 +41,7 @@ export const authCaptain = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const captain = await CAPTAIN.findById(decoded._id);
+    const captain = await CAPTAIN.findOne({_id: decoded._id});
 
     req.captain = captain;
 

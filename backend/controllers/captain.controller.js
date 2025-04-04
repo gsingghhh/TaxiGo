@@ -55,7 +55,7 @@ export const loginCaptain = async (req, res) => {
     return res.status(401).json({ msg: "Email or Password Incorrect" });
   }
 
-  const token = captain.generateAuthToken();
+  const token = await captain.generateAuthToken();
 
   res.cookie("token", token);
 

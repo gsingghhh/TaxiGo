@@ -29,17 +29,11 @@ export const getDistanceTime = async (req, res) => {
 
   try {
     const response = await getTimeAndDistance(origin, destination);
-    if (response.status === 200) {
-      const distanceInMeters = response.data.features[0].properties.distance;
-      const distanceInKm = (distanceInMeters / 1000).toFixed(2);
-      const etaSeconds = response.data.features[0].properties.time;
-      const etaMinutes = (etaSeconds / 60).toFixed(2);
-      return res.status(200).json({ distance: distanceInKm, eta: etaMinutes });
-    }
-  } catch (error) {
+    return res.status(200).json(response);
+    } catch (error) {
     return res.status(400).json({ error: "Something went wrong" });
   }
-};
+}
 
 export const getAutoCompleteSuggestion = async (req, res) => {
   const { input } = req.query;
@@ -51,9 +45,8 @@ export const getAutoCompleteSuggestion = async (req, res) => {
 
   try {
     const response = await getAutoSuggestion(input);
-    if (response.status === 200) {
-      return res.status(200).json(response.data.features)
-    }
+    return res.status(200).json(response)
+    
   } catch (error) {
     return res.status(400).json({msg: "couldn't fetch"})
   }
