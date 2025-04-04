@@ -104,7 +104,7 @@ const UserSignup = () => {
                 setPassword(e.target.value);
               }}
               id="password"
-              placeholder="password"
+              placeholder="password should be >= 6 characters"
             />
             <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
               Create account

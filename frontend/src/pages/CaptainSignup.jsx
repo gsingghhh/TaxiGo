@@ -114,7 +114,7 @@ const CaptainSignup = () => {const navigate = useNavigate();
                   setPassword(e.target.value);
                 }}
                 id="password"
-                placeholder="password"
+                placeholder="password should be >= 6 characters"
               />
               <h3 className="text-xl mb-2 font-semibold">
                 <label>Enter Vehicle Information</label>
