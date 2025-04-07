@@ -15,6 +15,8 @@ const CaptainSignup = () => {const navigate = useNavigate();
     const [capacity, setCapacity] = useState(null)
     const [plate, setPlate] = useState(null)
     const [vehicleType, setVehicleType] = useState(null)
+    const [error, setError] = useState(null)
+
 
     const {setCaptain} = useContext(captainDataContext)
   
@@ -35,13 +37,19 @@ const CaptainSignup = () => {const navigate = useNavigate();
         }
       };
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
-
-      if(response.status === 201){
-        const data = response.data
-        setCaptain(data.captain)
-        navigate('/captain-login')
+      try {
+        
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+  
+        if(response.status === 201){
+          const data = response.data
+          setCaptain(data.captain)
+          navigate('/captain-login')
+        }
+      } catch (error) {
+        setError(error.response?.data?.msg || 'Signup failed try again')
       }
+
 
       setFirstName("");
       setLastName("");
@@ -174,6 +182,8 @@ const CaptainSignup = () => {const navigate = useNavigate();
                   <option value="car">Car</option>
                 </select>
               </div>
+              {error && <p className="text-red-500">{error}</p>}
+
               <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
                 Register as Captain
               </button>

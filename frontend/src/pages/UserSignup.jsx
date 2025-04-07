@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Logo from "../components/Logo";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {UserDataContext} from "../context/UserContext.jsx";
+import { UserDataContext } from "../context/UserContext.jsx";
 
 const UserSignup = () => {
   const navigate = useNavigate();
@@ -12,8 +12,9 @@ const UserSignup = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null)
 
-  const {setUser} = useContext(UserDataContext)
+  const { setUser } = useContext(UserDataContext);
 
   const handleSumit = async (e) => {
     e.preventDefault();
@@ -26,21 +27,26 @@ const UserSignup = () => {
       password,
     };
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/users/register`,
-      newUser
-    );
-
-    if (response.status === 201) {
-      const data = response.data
-      setUser(data.user)
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
+  
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user);
+        navigate("/login");
+      }
+    } catch (error) {
+      setError(error.response?.data?.msg || 'Signup failed try again')
     }
+
 
     setFirstName("");
     setLastName("");
     setEmail("");
     setPassword("");
-    navigate("/login");
   };
 
   return (
@@ -106,6 +112,7 @@ const UserSignup = () => {
               id="password"
               placeholder="password should be >= 6 characters"
             />
+            {error && <p className="text-red-500">{error}</p>}
             <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
               Create account
             </button>
