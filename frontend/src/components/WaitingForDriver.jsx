@@ -20,19 +20,19 @@ const WaitingForDriver = (props) => {
             <h3 className="text-lg text-white font-medium">OTP</h3>
             <h5 className="text-xl font-medium text-yellow-600">{props.ride?.otp}</h5>
           </div>
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
+        <div className="flex w-full px-10 justify-start items-center gap-6 pl-12 pb-1">
           <i className="text-xl ri-user-location-line"></i>
           <div>
             <h3 className="text-xl font-medium">{props.ride?.origin}</h3>
           </div>
         </div>
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
+        <div className="flex w-full px-10 justify-start items-center gap-6 pl-12 pb-1">
           <i className="text-xl ri-map-pin-line"></i>
           <div>
             <h3 className="text-xl font-medium">{props.ride?.destination}</h3>
           </div>
         </div>
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 -mt-2 pb-1">
+        <div className="flex w-full px-10 justify-start items-center gap-6 pl-12 -mt-2 pb-1">
           <i className=" text-xl ri-money-rupee-circle-line"></i>
           <div>
             <h3 className="text-xl font-medium">₹ {props.ride?.fare}</h3>

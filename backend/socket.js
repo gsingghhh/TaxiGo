@@ -13,7 +13,6 @@ export const initializeSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-
     socket.on("join", async (data) => {
       const { userId, userType } = data;
 
@@ -40,7 +39,7 @@ export const initializeSocket = (server) => {
             ltd: location.ltd,
             lng: location.lng
         }
-       });
+      });
     });
 
     socket.on("disconnect", () => {
@@ -50,7 +49,7 @@ export const initializeSocket = (server) => {
 };
 
 export const sendMessageToSocketId = (socketId, messageObject) => {
-    console.log(`Sending message to ${socketId}`, messageObject)
+  console.log(`Sending message to ${socketId}`, messageObject)
   if (io) {
     io.to(socketId).emit(messageObject.event, messageObject.data);
   } else {

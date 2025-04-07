@@ -46,13 +46,13 @@ const Riding = () => {
           </div>
         </div>
         <div className="w-full flex mt-5 flex-col items-center gap-5 mb-5">
-          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
+          <div className="flex w-full px-10 justify-start items-center gap-6 pb-1">
             <i className="text-xl ri-map-pin-line"></i>
             <div>
               <h3 className="text-xl font-medium">{ride.destination}</h3>
             </div>
           </div>
-          <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
+          <div className="flex w-full px-10 justify-start items-center gap-6 pb-1">
             <i className=" text-xl ri-money-rupee-circle-line"></i>
             <div>
               <h3 className="text-xl font-medium">₹ {ride.fare}</h3>

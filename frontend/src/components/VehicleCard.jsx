@@ -25,7 +25,7 @@ const VehicleCard = (props) => {
           </p>
         </div>
       </div>
-      <h2 className="text-xl font-semibold">₹{props.fare? props.fare : <span className="text-gray-500">  ...</span>}</h2>
+      <h2 className="text-xl font-semibold">₹{props.fare? props.fare : <span className="text-gray-500 text-sm">  Calculating Price</span>}</h2>
     </div>
   );
 };

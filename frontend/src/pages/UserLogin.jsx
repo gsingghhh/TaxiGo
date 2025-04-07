@@ -10,8 +10,8 @@ const UserLogin = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    const {user, setUser} = useContext(UserDataContext)
+    const [error, setError] = useState(null)
+    const {setUser} = useContext(UserDataContext)
 
     const handleSumit = async (e) => {
         e.preventDefault()
@@ -19,15 +19,19 @@ const UserLogin = () => {
             email,
             password
         }
-
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
-
-        if(response.status === 200){
-          const data = response.data
-          setUser(data.user)
-          localStorage.setItem('token', data.token)
-          navigate('/home')
+        try {
+          const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+  
+          if(response.status === 200){
+            const data = response.data
+            setUser(data.user)
+            localStorage.setItem('token', data.token)
+            navigate('/home')
+          }
+        } catch (error) {
+          setError(error.response.data.error)
         }
+
 
         setEmail('')
         setPassword('')
@@ -45,7 +49,7 @@ const UserLogin = () => {
             <input
               className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
               type="email"
-              name="emial"
+              name="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -68,6 +72,9 @@ const UserLogin = () => {
               id="password"
               placeholder="password"
             />
+            <div className="mt-2 mb-0">
+              {error && <p className="text-red-500">{error}</p>}
+            </div>
             <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
               Login
             </button>
@@ -78,7 +85,7 @@ const UserLogin = () => {
         </div>
         <div className="p-6">
           <Link to={'/captain-login'} className="bg-amber-200 inline-block text-center py-2 px-4 rounded-md w-full text-xl font-semibold">
-            SignIn as Captain
+            Login as Captain
           </Link>
         </div>
       </div>

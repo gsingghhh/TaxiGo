@@ -1,102 +1,103 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const ConfirmRidePopup = (props) => {
+const ConfirmRidePopup = ({ ride, setConfirmRidePopupPanel, setRidePopupPanel }) => {
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        params: {
-          rideId: props.ride._id,
-          otp: otp,
-        },
-      });
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          params: {
+            rideId: ride._id,
+            otp: otp,
+          },
+        }
+      );
 
-    if(response.status === 200){
-      props.setConfirmRidePopupPanel(false)
-      props.setRidePopupPanel(false)
-      navigate('/captain-riding',{ state: {ride: props.ride} })
+      if (response.status === 200) {
+        setConfirmRidePopupPanel(false);
+        setRidePopupPanel(false);
+        navigate("/captain-riding", { state: { ride } });
+      }
+    } catch (error) {
+      setError(error.response?.data?.message[0]?.msg || "Invalid OTP");
     }
   };
 
   return (
-    <div className="flex justify-between h-full gap-3 flex-col">
-      <h3 className="text-2xl font-semibold mb-5">Start the ride?</h3>
-      <div className="flex items-center justify-between p-3 bg-amber-300 rounded-lg">
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col justify-between h-full">
+      <h3 className="text-2xl font-bold mb-5">Start the Ride</h3>
+
+      <div className="flex items-center justify-between p-4 bg-yellow-300/80 rounded-xl shadow-md">
+        <div className="flex items-center gap-4">
           <img
-            className="h-12 rounded-full object-cover w-12"
+            className="w-12 h-12 rounded-full object-cover border-2 border-white"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_DY_UkwXIUk9kgA7CbqYlBmLzVRPqme7m1A&s"
-            alt=""
+            alt="User"
           />
-          <h2 className="text-lg font-medium">
-            {props.ride?.user.fullName.firstName +
-              " " +
-              props.ride?.user.fullName.lastName}
+          <h2 className="text-lg font-semibold">
+            {ride?.user.fullName.firstName + " " + ride?.user.fullName.lastName}
           </h2>
         </div>
-        <h5 className="text-lg font-semibold">2.2 KM</h5>
+        <span className="text-lg font-semibold">2.2 KM</span>
       </div>
-      <div className="w-full flex flex-col items-center gap-5">
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
-          <i className="text-xl ri-user-location-line"></i>
-          <div>
-            <h3 className="text-xl font-medium">{props.ride?.origin}</h3>
-          </div>
-        </div>
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
-          <i className="text-xl ri-map-pin-line"></i>
-          <div>
-            <h3 className="text-xl font-medium">{props.ride?.destination}</h3>
-          </div>
-        </div>
-        <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 -mt-2 pb-1">
-          <i className=" text-xl ri-money-rupee-circle-line"></i>
-          <div>
-            <h3 className="text-xl font-medium">₹ {props.ride?.fare}</h3>
-            <p className="-mt-1 text-sm text-gray-600">Cash</p>
-          </div>
-        </div>
+
+      <div className="flex flex-col gap-4 mt-6 text-gray-800">
+        <InfoRow icon="ri-user-location-line" label={ride?.origin} />
+        <InfoRow icon="ri-map-pin-line" label={ride?.destination} />
+        <InfoRow
+          icon="ri-money-rupee-circle-line"
+          label={`₹ ${ride?.fare}`}
+          subLabel="Cash"
+        />
       </div>
-      <form
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
-      >
-        <div className="mt-6 flex flex-col">
-          <input
-            type="text"
-            value={otp}
-            onChange={(e) => {
-              setOtp(e.target.value);
-            }}
-            placeholder="Enter OTP"
-            className="w-full text-center my-5 font-mono bg-slate-200 rounded-lg text-lg px-8 py-2 mb-20"
-          />
-          <button className="w-full bg-blue-500 text-center text-white font-semibold p-2 rounded-xl mt-3 mb-3">
-            Confirm
-          </button>
-          <button
-            onClick={() => {
-              props.setConfirmRidePopupPanel(false);
-            }}
-            className="w-full bg-red-500 text-white font-semibold p-2 rounded-xl"
-          >
-            Cancel
-          </button>
-        </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col mt-10 gap-4">
+        <input
+          type="text"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP"
+          className="w-full text-center text-xl font-mono bg-slate-100 rounded-xl p-3 border focus:outline-blue-400"
+        />
+        {error && <p className="text-center text-red-600 text-sm -mt-2">{error}</p>}
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 rounded-xl transition-all"
+        >
+          Confirm Ride
+        </button>
+        <button
+          type="button"
+          onClick={() => setConfirmRidePopupPanel(false)}
+          className="w-full bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-3 rounded-xl transition-all"
+        >
+          Cancel
+        </button>
       </form>
     </div>
   );
 };
+
+const InfoRow = ({ icon, label, subLabel }) => (
+  <div className="flex items-start gap-4 pl-2">
+    <i className={`text-2xl ${icon} text-gray-700`} />
+    <div>
+      <h3 className="text-lg font-medium leading-snug">{label}</h3>
+      {subLabel && <p className="text-sm text-gray-500 -mt-1">{subLabel}</p>}
+    </div>
+  </div>
+);
 
 export default ConfirmRidePopup;

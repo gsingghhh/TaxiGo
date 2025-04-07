@@ -9,6 +9,7 @@ const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {setCaptain} = useContext(captainDataContext)
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   const handleSumit = async (e) => {
@@ -17,15 +18,19 @@ const CaptainLogin = () => {
       email,
       password,
     };
-
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData)
-
-    if(response.status === 200){
-      const data = response.data
-      setCaptain(data.captain)
-      localStorage.setItem('token', data.token)
-      navigate('/captain-home')
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData)
+  
+      if(response.status === 200){
+        const data = response.data
+        setCaptain(data.captain)
+        localStorage.setItem('token', data.token)
+        navigate('/captain-home')
+      }
+    } catch (error) {
+      setError(error.response.data.msg)
     }
+
 
     setEmail("");
     setPassword("");
@@ -42,7 +47,7 @@ const CaptainLogin = () => {
             <input
               className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
               type="email"
-              name="emial"
+              name="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -65,6 +70,9 @@ const CaptainLogin = () => {
               id="password"
               placeholder="password"
             />
+            <div className="mt-2 mb-0">
+              {error && <p className="text-red-500">{error}</p>}
+            </div>
             <button className="bg-black text-white py-2 px-4 rounded-md w-full mt-10 text-xl font-semibold">
               Login
             </button>
@@ -81,7 +89,7 @@ const CaptainLogin = () => {
             to={"/login"}
             className="bg-green-300 inline-block text-center py-2 px-4 rounded-md w-full text-xl font-semibold"
           >
-            SignIn as User
+            Login as User
           </Link>
         </div>
       </div>

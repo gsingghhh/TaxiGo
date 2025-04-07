@@ -83,7 +83,7 @@ const UserSignup = () => {
             <input
               className="bg-orange-50 rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3"
               type="email"
-              name="emial"
+              name="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);

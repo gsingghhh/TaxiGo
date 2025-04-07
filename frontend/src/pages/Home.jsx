@@ -44,19 +44,30 @@ const Home = () => {
   const { user } = useContext(UserDataContext);
 
   useEffect(() => {
-    socket.emit("join", { userType: "user", userId: user?._id });
-  });
-
-  socket.on("ride-confirmed", (ride) => {
-    setVehicleFound(false);
-    setWaitingForDriverPanel(true);
-    setRide(ride);
-  });
-
-  socket.on("ride-started", (ride) => {
-    setWaitingForDriverPanel(false);
-    navigate("/riding", { state: { ride } });
-  });
+    if (!socket || !user?._id) return;
+  
+    socket.emit("join", { userType: "user", userId: user._id });
+  
+    const handleRideConfirmed = (ride) => {
+      setVehicleFound(false);
+      setWaitingForDriverPanel(true);
+      setRide(ride);
+    };
+  
+    const handleRideStarted = (ride) => {
+      setWaitingForDriverPanel(false);
+      navigate("/riding", { state: { ride } });
+    };
+  
+    socket.on("ride-confirmed", handleRideConfirmed);
+    socket.on("ride-started", handleRideStarted);
+  
+    return () => {
+      socket.off("ride-confirmed", handleRideConfirmed);
+      socket.off("ride-started", handleRideStarted);
+    };
+  }, [socket, user, navigate]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

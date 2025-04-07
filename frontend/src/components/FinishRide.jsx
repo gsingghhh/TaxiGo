@@ -8,8 +8,6 @@ const FinishRide = (props) => {
 
   const endRide = async () => {
 
-    console.log(props.ride?._id)
-
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {rideId: props.ride?._id}, {
       headers: {
         Authorization: `bearer ${localStorage.getItem('token')}`
@@ -37,19 +35,19 @@ const FinishRide = (props) => {
       <h5 className="text-lg font-semibold">2.2 KM</h5>
     </div>
     <div className="w-full flex flex-col items-center gap-5 mb-5">
-      <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-3">
+      <div className="flex w-full px-10 justify-start items-center gap-6 pb-3">
         <i className="text-xl ri-user-location-line"></i>
         <div>
           <h3 className="text-xl font-medium">{props.ride?.origin}</h3>
         </div>
       </div>
-      <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-3">
+      <div className="flex w-full px-10 justify-start items-center gap-6 pb-3">
         <i className="text-xl ri-map-pin-line"></i>
         <div>
           <h3 className="text-xl font-medium">{props.ride?.destination}</h3>
         </div>
       </div>
-      <div className="flex w-full px-10 justify-start items-center gap-10 border-b-1 pb-1">
+      <div className="flex w-full px-10 justify-start items-center gap-6 pb-1">
         <i className=" text-xl ri-money-rupee-circle-line"></i>
         <div>
           <h3 className="text-xl font-medium">₹ {props.ride?.fare}</h3>

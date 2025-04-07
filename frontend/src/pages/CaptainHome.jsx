@@ -15,6 +15,7 @@ const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
   const [ride, setRide] = useState(null);
+  const [showMap, setShowMap] = useState(false);
 
   const { socket } = useContext(SocketDataContext);
   const { captain } = useContext(captainDataContext);
@@ -25,22 +26,8 @@ const CaptainHome = () => {
   useEffect(() => {
     socket.emit("join", { userId: captain._id, userType: "captain" });
 
-    const updateLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          socket.emit("update-location", {
-            userId: captain._id,
-            location: {
-              ltd: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-          });
-        });
-      }
-    };
-
-    setInterval(updateLocation, 10000);
-    updateLocation();
+    const timer = setTimeout(() => setShowMap(true), 100); // Delay map by 100ms
+    return () => clearTimeout(timer);
   });
 
   socket.on("new-ride", (data) => {
@@ -102,8 +89,7 @@ const CaptainHome = () => {
         </Link>
       </div>
       <div className="fixed top-0 z-10 w-full">
-        {/* <img src="tempImage.png" alt="" /> */}
-        <LiveTracking/>
+        {showMap && <LiveTracking />}
       </div>
       <div className="fixed bg-white rounded-t-3xl shadow-2xl bottom-0 w-full h-2/5 px-4 z-30 pt-6">
         <CaptainDetails />
@@ -112,13 +98,21 @@ const CaptainHome = () => {
         ref={ridePopupRef}
         className="fixed z-40 bottom-0 w-full bg-white px-3 py-10 translate-y-full"
       >
-        <RidePopup ride={ride} setRidePopupPanel={setRidePopupPanel} confirmRide={confirmRide} />
+        <RidePopup
+          ride={ride}
+          setRidePopupPanel={setRidePopupPanel}
+          confirmRide={confirmRide}
+        />
       </div>
       <div
         ref={confirmRidePopupRef}
         className="fixed bottom-0 h-full w-full z-50 bg-white px-3 py-10 translate-y-full"
       >
-        <ConfirmRidePopup setConfirmRidePopupPanel={setConfirmRidePopupPanel} setRidePopupPanel={setRidePopupPanel} ride={ride} />
+        <ConfirmRidePopup
+          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+          setRidePopupPanel={setRidePopupPanel}
+          ride={ride}
+        />
       </div>
     </div>
   );
