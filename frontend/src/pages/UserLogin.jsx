@@ -29,7 +29,11 @@ const UserLogin = () => {
             navigate('/home')
           }
         } catch (error) {
-          setError(error.response.data.error)
+          if (error.code === "ERR_NETWORK") {
+            setError("Server is currently waking up. Please try again in 30–40 seconds.");
+          } else {
+            setError(error.response?.data?.error || "Something went wrong.");
+          }
         }
 
 
