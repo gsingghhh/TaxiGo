@@ -15,6 +15,7 @@ const UserLogin = () => {
 
     const handleSumit = async (e) => {
         e.preventDefault()
+        setError(null)
         const userData = {
             email,
             password
@@ -29,8 +30,8 @@ const UserLogin = () => {
             navigate('/home')
           }
         } catch (error) {
-          if (error.code === "ERR_NETWORK") {
-            setError("Server is currently waking up. Please try again in 30–40 seconds.");
+          if (error.code === "ERR_NETWORK" || error.message.includes("Network Error")) {
+            setError("The server may be waking up. Please wait a few seconds and try again.");
           } else {
             setError(error.response?.data?.error || "Something went wrong.");
           }
